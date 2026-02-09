@@ -44,7 +44,7 @@ public class LambdaBasics {
         System.out.println(calculator.add(2,3));
         int[] numbers = {1, 2, 3, 4, 5};
         int[] updated = incrementByTwo.increment(numbers);
-        System.out.println("Output of (Increment all numbers by two function");
+        System.out.println("Output of (Increment all numbers by two");
         System.out.println(Arrays.toString(updated));
         System.out.println("Output of (Increment all Even numbers by two");
         int updated2[]=incrementEvenByX.incrementEvenByX(2,numbers);
