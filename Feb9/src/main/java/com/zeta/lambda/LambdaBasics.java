@@ -30,12 +30,10 @@ public class LambdaBasics {
         }
         return result;
     };
-    static SumOfEveryThird sumOfEveryThird=(array) -> {
-        int sum= 0;
+    static SumOfEveryThird sumOfEveryThird = (array) -> {
+        int sum = 0;
         for (int i = 0; i < array.length; i++) {
-            if (i%3==0) {
-                sum+=array[i];
-            }
+            if (i % 3 == 0) sum += array[i];
         }
         return sum;
     };
@@ -52,7 +50,7 @@ public class LambdaBasics {
         int updated2[]=incrementEvenByX.incrementEvenByX(2,numbers);
         System.out.println(Arrays.toString(updated2));
         System.out.println("Output of Sum of every third value");
-        int sum1=SumOfEveryThird.sumOfEveryThird(numbers);
+        int sum1=sumOfEveryThird.sumOfEveryThird(numbers);
         System.out.println(sum1);
 
     }

@@ -4,3 +4,4 @@ package com.zeta.lambda;
 interface SumOfEveryThird {
     int sumOfEveryThird(int[] array);
 }
+
