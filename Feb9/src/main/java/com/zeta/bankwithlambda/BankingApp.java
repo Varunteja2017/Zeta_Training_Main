@@ -12,14 +12,22 @@ public class BankingApp {
             logger.accept("Warning: Low balance!");
         }
     };
+    private static int readInt(Scanner sc) {
+        while (!sc.hasNextInt()) {
+            System.out.println("❌ Invalid input. Please enter a number:");
+            sc.next(); // discard wrong input
+        }
+        return sc.nextInt();
+    }
 
 
     public static void main(String[] args) {
         Scanner sc = new Scanner(System.in);
+
         System.out.println("Enter account Number:");
-        int accountNumber = sc.nextInt();
+        int accountNumber = readInt(sc);
         System.out.print("Enter initial bank balance: ₹");
-        int initialBalance = sc.nextInt();
+        int initialBalance = readInt(sc);
         while (true) {
             try {
                 if (initialBalance < 0) {
@@ -30,7 +38,7 @@ public class BankingApp {
             } catch (Exception e) {
                 e.printStackTrace();
                 System.out.println("Enter Again");
-                initialBalance=sc.nextInt();
+                initialBalance=readInt(sc);
                 e.printStackTrace();
             }
         }
@@ -39,7 +47,7 @@ public class BankingApp {
 
             // Thread pool with 3 worker threads
         ExecutorService executor = Executors.newFixedThreadPool(3);
-        
+
         Consumer<BankAccount> accountSummary = acc ->
                 System.out.println("Acc No: " + acc.getAccountNumber() +
                         " | Balance: ₹" + acc.getBalance());
@@ -58,7 +66,7 @@ public class BankingApp {
                 System.out.println("10. Exit");
                 System.out.print("Enter your choice: ");
 
-                int choice = sc.nextInt();
+                int choice = readInt(sc);
                 try {
                     switch (choice) {
 
@@ -69,7 +77,7 @@ public class BankingApp {
 
                         case 2:
                             System.out.print("Enter amount to deposit: ₹");
-                            int dep = sc.nextInt();
+                            int dep = readInt(sc);
                             Validator.validate(dep);
                             logger.accept("Deposit Successful: ₹" + dep);
                             executor.execute(() -> account.deposit(dep));
@@ -77,7 +85,7 @@ public class BankingApp {
 
                         case 3:
                             System.out.print("Enter amount to withdraw: ₹");
-                            int withdraw = sc.nextInt();
+                            int withdraw =readInt(sc);
                             Validator.validate(withdraw);
                             executor.execute(() -> {
                                 account.withdraw(withdraw);
@@ -98,11 +106,11 @@ public class BankingApp {
                             break;
                         case 5:
                             System.out.println("Enter the Amount you required for loan: ");
-                            int amount = sc.nextInt();
+                            int amount = readInt(sc);
                             System.out.println("Enter the tenure in months");
-                            int tenure = sc.nextInt();
+                            int tenure = readInt(sc);
                             System.out.println("Enter the Interest Rate");
-                            int interestRate=sc.nextInt();
+                            int interestRate=readInt(sc);
                             account.issueLoan(tenure, amount, interestRate);
                             logger.accept("Loan Issued Successfully");
                             break;
@@ -112,7 +120,7 @@ public class BankingApp {
                             break;
                         case 7:
                             System.out.print("Enter EMI amount to pay: ₹");
-                            double emiAmount = sc.nextDouble();
+                            double emiAmount = readInt(sc);;
                             account.payLoanEMI(emiAmount);
                             break;
                         case 8:
@@ -132,7 +140,6 @@ public class BankingApp {
                     }
                 } catch (Exception e) {
                     e.printStackTrace();
-                    sc.nextLine();
 
 
                 }
