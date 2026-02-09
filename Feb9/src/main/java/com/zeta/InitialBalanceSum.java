@@ -43,7 +43,7 @@ public class InitialBalanceSum {
     public static void main(String[] args) {
         List<Account> accounts = new ArrayList<>();
         Random random= new Random();
-        for (int i = 0; i<=20; i++){
+        for (int i = 0; i<=10000; i++){
             Account account=new SavingAccount(i);
             account.setBalance(random.nextInt(1000));
             accounts.add(account);
