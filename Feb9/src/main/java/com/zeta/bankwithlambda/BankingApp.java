@@ -14,7 +14,7 @@ public class BankingApp {
     };
     private static int readInt(Scanner sc) {
         while (!sc.hasNextInt()) {
-            System.out.println("❌ Invalid input. Please enter a number:");
+            System.out.println("Invalid input. Please enter a number:");
             sc.next(); // discard wrong input
         }
         return sc.nextInt();
