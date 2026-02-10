@@ -48,7 +48,6 @@ public class BankingApp {
 
         BankAccount account = new BankAccount(initialBalance, accountNumber);
 
-            // Thread pool with 3 worker threads
         ExecutorService executor = Executors.newFixedThreadPool(3);
 
         Consumer<BankAccount> accountSummary = acc ->
