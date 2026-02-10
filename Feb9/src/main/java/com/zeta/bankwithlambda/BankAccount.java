@@ -1,12 +1,14 @@
 package com.zeta.bankwithlambda;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.function.Predicate;
 
 public class BankAccount {
     private int balance;
     LoanAccount loan;
     int accountNumber;
-
+    private List<Transaction> transactions = new ArrayList<>();
     public BankAccount(int balance, int accountNumber){
         this.balance=balance;
         this.accountNumber=accountNumber;
@@ -98,6 +100,14 @@ public class BankAccount {
 
         balance -= amount;
         loan.payEMI(amount);
+    }
+
+    public synchronized void addTransaction(Transaction t) {
+        transactions.add(t);
+    }
+
+    public List<Transaction> getTransactions() {
+        return transactions;
     }
 
 }
