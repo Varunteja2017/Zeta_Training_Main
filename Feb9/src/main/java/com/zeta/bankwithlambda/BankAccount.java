@@ -25,6 +25,7 @@ public class BankAccount {
             }
             catch (Exception e){}
             balance-=amount;
+            System.out.println("Withdraw Successfull " );
         }
 
     }
