@@ -15,28 +15,116 @@ public class BankingApp {
             logger.accept("Warning: Low balance!");
         }
     };
+    private static int readPositiveInt(Scanner sc) {
+        int number;
 
-    private static int readInt(Scanner sc) {
-        while (!sc.hasNextInt()) {
-            System.out.println("Invalid input. Please enter a number:");
-            sc.next();
+        while (true) {
+            while (!sc.hasNextInt()) {
+                System.out.print("Invalid input. Please enter a positive number: ");
+                sc.next();
+            }
+
+            number = sc.nextInt();
+
+            if (number > 0) {
+                return number;
+            } else {
+                System.out.print("Number must be greater than 0. Try again: ");
+            }
         }
-        return sc.nextInt();
+    }
+    private static void handleCheckBalance(BankAccount account) {
+        logger.accept("Balance checked. Current balance: ₹" + account.getBalance());
+    }
+
+    private static void handleDeposit(Scanner sc, ExecutorService executor, BankAccount account) {
+        System.out.print("Enter amount to deposit: ₹");
+        int dep = readPositiveInt(sc);
+        Validator.validate(dep);
+        logger.accept("Deposit Successful: ₹" + dep);
+        executor.execute(() -> account.deposit(dep));
+    }
+
+    private static void handleWithdraw(Scanner sc, ExecutorService executor, BankAccount account) {
+        System.out.print("Enter amount to withdraw: ₹");
+        int withdraw = readPositiveInt(sc);
+        Validator.validate(withdraw);
+        executor.execute(() -> {
+            account.withdraw(withdraw);
+            lowBalanceAlert.accept(account);
+        });
+        logger.accept("Withdraw requested: ₹" + withdraw);
+    }
+
+    private static void handleParallelWithdrawals(ExecutorService executor, BankAccount account) {
+        int half = account.getBalance() / 2;
+        System.out.println("Simulating two parallel withdrawals of ₹" + half);
+        executor.execute(new WithdrawTask(account, half));
+        executor.execute(new WithdrawTask(account, half));
+    }
+
+    private static void handleRequestLoan(Scanner sc, BankAccount account) {
+        System.out.println("Enter the Amount you require for loan: ");
+        int amount = readPositiveInt(sc);
+        System.out.println("Enter the tenure in months");
+        int tenure = readPositiveInt(sc);
+        System.out.println("Enter the Interest Rate");
+        int interestRate = readPositiveInt(sc);
+        account.issueLoan(tenure, amount, interestRate);
+        logger.accept("Loan Issued Successfully");
+    }
+
+    private static void handleShowLoanDetails(BankAccount account) {
+        account.showLoanDetails();
+        logger.accept("Loan Details Requested");
+    }
+
+    private static void handlePayLoanEMI(Scanner sc, BankAccount account) {
+        System.out.print("Enter EMI amount to pay: ₹");
+        double emiAmount = readPositiveInt(sc);
+        account.payLoanEMI(emiAmount);
+    }
+
+    private static void handleCloseLoan(BankAccount account) {
+        account.closeLoan();
+    }
+
+    private static void handleCreateAccount(Scanner sc, Map<Integer, BankAccount> accounts) {
+        System.out.print("Enter new account Number: ");
+        int newAccountNumber = readPositiveInt(sc);
+        if (accounts.containsKey(newAccountNumber)) {
+            System.out.println("Account number already exists.");
+            return;
+        }
+        System.out.print("Enter initial bank balance: ₹");
+        int newInitBalance = readPositiveInt(sc);
+        BankAccount newAcc = new BankAccount(newInitBalance, newAccountNumber);
+        accounts.put(newAccountNumber, newAcc);
+        logger.accept("Account created: " + newAccountNumber);
+    }
+
+    private static BankAccount handleSwitchAccount(Scanner sc, Map<Integer, BankAccount> accounts) {
+        System.out.print("Enter account Number to switch to: ");
+        int switchAcc = readPositiveInt(sc);
+        if (!accounts.containsKey(switchAcc)) {
+            System.out.println("Account not found.");
+            return null;
+        }
+        logger.accept("Switched to account: " + switchAcc);
+        return accounts.get(switchAcc);
     }
 
     public static void main(String[] args) {
         Scanner sc = new Scanner(System.in);
-
         System.out.println("Enter account Number:");
-        int accountNumber = readInt(sc);
+        int accountNumber = readPositiveInt(sc);
         System.out.print("Enter initial bank balance: ₹");
-        int initialBalance = readInt(sc);
+        int initialBalance = readPositiveInt(sc);
 
         while (initialBalance < 0) {
             System.out.println("Initial balance must be non-negative. Enter again:");
-            initialBalance = readInt(sc);
+            initialBalance = readPositiveInt(sc);
         }
-
         Map<Integer, BankAccount> accounts = new HashMap<>();
 
         BankAccount[] current = new BankAccount[]{new BankAccount(initialBalance, accountNumber)};
@@ -65,103 +153,32 @@ public class BankingApp {
             System.out.println("12. Exit");
             System.out.print("Enter your choice: ");
 
-            int choice = readInt(sc);
+            int choice = readPositiveInt(sc);
             try {
                 switch (choice) {
-                    case 1:
-                        logger.accept("Balance checked. Current balance: ₹" + current[0].getBalance());
-                        break;
-
-                    case 2:
-                        System.out.print("Enter amount to deposit: ₹");
-                        int dep = readInt(sc);
-                        Validator.validate(dep);
-                        logger.accept("Deposit Successful: ₹" + dep);
-                        executor.execute(() -> current[0].deposit(dep));
-                        break;
-
-                    case 3:
-                        System.out.print("Enter amount to withdraw: ₹");
-                        int withdraw = readInt(sc);
-                        Validator.validate(withdraw);
-                        executor.execute(() -> {
-                            current[0].withdraw(withdraw);
-                            lowBalanceAlert.accept(current[0]);
-                        });
-                        logger.accept("Withdraw requested: ₹" + withdraw);
-                        break;
-
-                    case 4: {
-                        int half = current[0].getBalance() / 2;
-                        System.out.println("Simulating two parallel withdrawals of ₹" + half);
-                        executor.execute(new WithdrawTask(current[0], half));
-                        executor.execute(new WithdrawTask(current[0], half));
-                        break;
-                    }
-
-                    case 5:
-                        System.out.println("Enter the Amount you require for loan: ");
-                        int amount = readInt(sc);
-                        System.out.println("Enter the tenure in months");
-                        int tenure = readInt(sc);
-                        System.out.println("Enter the Interest Rate");
-                        int interestRate = readInt(sc);
-                        current[0].issueLoan(tenure, amount, interestRate);
-                        logger.accept("Loan Issued Successfully");
-                        break;
-
-                    case 6:
-                        current[0].showLoanDetails();
-                        logger.accept("Loan Details Requested");
-                        break;
-
-                    case 7:
-                        System.out.print("Enter EMI amount to pay: ₹");
-                        double emiAmount = readInt(sc);
-                        current[0].payLoanEMI(emiAmount);
-                        break;
-
-                    case 8:
-                        current[0].closeLoan();
-                        break;
-
-                    case 9:
-                        accountSummary.accept(current[0]);
-                        break;
-
-                    case 10:
-                        System.out.print("Enter new account Number: ");
-                        int newAccountNumber = readInt(sc);
-                        if (accounts.containsKey(newAccountNumber)) {
-                            System.out.println("Account number already exists.");
-                            break;
-                        }
-                        System.out.print("Enter initial bank balance: ₹");
-                        int newInitBalance = readInt(sc);
-                        BankAccount newAcc = new BankAccount(newInitBalance, newAccountNumber);
-                        accounts.put(newAccountNumber, newAcc);
-                        logger.accept("Account created: " + newAccountNumber);
-                        break;
-
+                    case 1:handleCheckBalance(current[0]);break;
+                    case 2:handleDeposit(sc, executor, current[0]);break;
+                    case 3:handleWithdraw(sc, executor, current[0]);break;
+                    case 4:handleParallelWithdrawals(executor, current[0]);break;
+                    case 5:handleRequestLoan(sc, current[0]);break;
+                    case 6:handleShowLoanDetails(current[0]);break;
+                    case 7:handlePayLoanEMI(sc, current[0]);break;
+                    case 8:handleCloseLoan(current[0]);break;
+                    case 9:accountSummary.accept(current[0]);break;
+                    case 10:handleCreateAccount(sc, accounts);break;
                     case 11:
-                        System.out.print("Enter account Number to switch to: ");
-                        int switchAcc = readInt(sc);
-                        if (!accounts.containsKey(switchAcc)) {
-                            System.out.println("Account not found.");
-                            break;
+                        BankAccount switched = handleSwitchAccount(sc, accounts);
+                        if (switched != null) {
+                            current[0] = switched;
+                            currentAccountNumber = switched.getAccountNumber();
                         }
-                        current[0] = accounts.get(switchAcc);
-                        currentAccountNumber = switchAcc;
-                        logger.accept("Switched to account: " + switchAcc);
                         break;
-
                     case 12:
                         System.out.println("Shutting down banking system...");
                         executor.shutdown();
                         sc.close();
                         System.exit(0);
                         break;
-
                     default:
                         System.out.println("Invalid choice! Try again.");
                 }

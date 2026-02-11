@@ -37,7 +37,6 @@ public class BankAccount {
         validateAmount(amount);
         balance+=amount;
     }
-    static Predicate<Integer> loanEligibility = bal -> bal >= 5000;
     public void issueLoan(int tenure, int principle, int interestRate) {
         if (!loanEligibility.test(balance)) {
             throw new IllegalStateException("Not eligible for loan. Minimum balance ₹5000 required.");
@@ -47,7 +46,8 @@ public class BankAccount {
         }
 
         loan = new LoanAccount(tenure, principle, interestRate);
-        System.out.println("Loan issued successfully.");
+        System.out.println("Loan issued successfully Deposited into your account.");
+        balance+=principle;
     }
 
 
@@ -70,7 +70,8 @@ public class BankAccount {
     static Predicate<Float> validAmount = amt -> amt > 0;
     static Predicate<Float> maxLimit = amt -> amt <= 1_00_000;
     static Predicate<Float> validTransactionAmount = validAmount.and(maxLimit);
-
+    static Predicate<Integer> loanEligibility = bal -> bal >= 100000;
+    Predicate<Double> hasEnoughBalance = amt -> balance >= amt;
 
     public synchronized int getBalance() {
         return this.balance;
@@ -89,7 +90,7 @@ public class BankAccount {
         System.out.println("Remaining Balance to pay: ₹" + loan.getRemainingBalance());
     }
 
-    Predicate<Double> hasEnoughBalance = amt -> balance >= amt;
+
     public synchronized void payLoanEMI(double amount) {
         if (loan == null || loan.getStatus() == LoanStatus.CLOSED) {
             throw new IllegalStateException("No active loans found.");
