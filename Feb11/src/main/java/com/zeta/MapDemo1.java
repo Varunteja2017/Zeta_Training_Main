@@ -2,9 +2,8 @@ package com.zeta;
 
 import java.util.HashMap;
 import java.util.Map;
-class MyKey{
+import java.util.TreeMap;
 
-}
 public class MapDemo1 {
     public static void main(String[] args) {
         basics();
@@ -12,11 +11,10 @@ public class MapDemo1 {
     }
 
     private static void customKey() {
-        Map<MyKey, String> map=new HashMap<>();
-        MyKey key1= new MyKey();
-        MyKey key2= new MyKey();
+        Map<MyKey, String> map=new TreeMap<>();
+        MyKey key1= new MyKey(1);
+        MyKey key2= new MyKey(2);
         map.put(key1, "Value1");
-        map.put(key2,"Value2");
         System.out.println(map.get(key2));
 
     }
