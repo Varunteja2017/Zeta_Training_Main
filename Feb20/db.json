@@ -1,0 +1,18 @@
+{
+  "books": [
+    {
+      "id": "1",
+      "title": "Clean Code",
+      "author": "Robert Martin",
+      "category": "Programming",
+      "available": true
+    },
+    {
+      "id": "d064",
+      "title": "Sample",
+      "author": "varun",
+      "category": "Library",
+      "available": true
+    }
+  ]
+}
