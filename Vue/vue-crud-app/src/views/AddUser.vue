@@ -3,6 +3,18 @@
 
   <input v-model="name" placeholder="Name" />
   <input v-model="email" placeholder="Email" />
+  <div>
+    <label>
+      <input type="radio" value="Male" v-model="gender" />
+      Male
+    </label>
+
+    <label>
+      <input type="radio" value="Female" v-model="gender" />
+      Female
+    </label>
+  </div>
+
   <button @click="saveUser">Save</button>
 </template>
 
@@ -13,14 +25,16 @@ export default {
   data() {
     return {
       name: '',
-      email: ''
+      email: '',
+      gender: ''
     }
   },
   methods: {
     saveUser() {
       api.addUser({
         name: this.name,
-        email: this.email
+        email: this.email,
+        gender: this.gender
       }).then(() => {
         this.$router.push('/users')
       })
