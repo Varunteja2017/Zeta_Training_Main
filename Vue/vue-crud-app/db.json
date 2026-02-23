@@ -1,9 +1,9 @@
 {
   "users": [
     {
-      "id": "1",
       "name": "Amit",
-      "email": "amit@test.com"
+      "email": "amit@test.com",
+      "id": "1"
     },
     {
       "id": "2",
@@ -11,9 +11,21 @@
       "email": "neha@test.com"
     },
     {
-      "id": "9fe2",
       "name": "varun",
-      "email": "varunteja2017@gmail.com"
+      "email": "varunteja2017@gmail.com",
+      "id": "9fe2"
+    },
+    {
+      "id": "5230",
+      "name": "varun",
+      "email": "varunteja2017@gmail.com",
+      "gender": "Male"
+    },
+    {
+      "id": "4052",
+      "name": "kaushal",
+      "email": "kaus@gmail.com",
+      "gender": "Male"
     }
   ]
 }
