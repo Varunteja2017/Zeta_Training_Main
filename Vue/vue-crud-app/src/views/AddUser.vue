@@ -3,20 +3,16 @@
 
   <input v-model="name" placeholder="Name" />
   <input v-model="email" placeholder="Email" />
-  <label>
-    <input type="radio" value="Male" v-model="gender" />
-    Male
-  </label>
-  <label>
-    <input type="radio" value="Female" v-model="gender" />
-    Female
-  </label>
+  <input type="radio" value="Male" v-model="gender" />
+  <label> Male </label>
+  <input type="radio" value="Female" v-model="gender" />
+  <label> Female </label>
   <input type="checkbox" v-model="skills" value="JavaScript" />
-  <label>JavaScript</label>
+  <label> JavaScript </label>
   <input type="checkbox" v-model="skills" value="Python" />
-  <label>Python</label>
+  <label> Python </label>
   <input type="checkbox" v-model="skills" value="Java" />
-  <label>Java</label>
+  <label> Java </label>
 
 
   <button @click="saveUser">Save</button>
